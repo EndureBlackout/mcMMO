@@ -83,9 +83,6 @@ commands:
     ptp:
         description: Teleport to a party member
         permission: mcmmo.commands.ptp
-    party:
-        description: Create/join a party
-        permission: mcmmo.commands.party
     inspect:
         aliases: [mcinspect, mmoinspect]
         description: View detailed mcMMO info on another player
@@ -96,10 +93,6 @@ commands:
     mcconvert:
         description: Convert between different database and formula types
         permission: mcmmo.commands.mcconvert
-    partychat:
-        aliases: [pc, p]
-        description: Toggle Party chat or send party chat messages
-        permission: mcmmo.chat.partychat
     skillreset:
         description: Reset the level of one or all of your skills
         permission: mcmmo.commands.skillreset

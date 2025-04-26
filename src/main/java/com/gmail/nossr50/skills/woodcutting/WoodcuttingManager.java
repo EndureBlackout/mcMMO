@@ -1,23 +1,16 @@
 package com.gmail.nossr50.skills.woodcutting;
 
-import com.gmail.nossr50.api.FakeBlockBreakEventType;
-import com.gmail.nossr50.api.ItemSpawnReason;
-import com.gmail.nossr50.config.experience.ExperienceConfig;
-import com.gmail.nossr50.datatypes.experience.XPGainReason;
-import com.gmail.nossr50.datatypes.experience.XPGainSource;
-import com.gmail.nossr50.datatypes.interactions.NotificationType;
-import com.gmail.nossr50.datatypes.player.McMMOPlayer;
-import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
-import com.gmail.nossr50.datatypes.skills.SubSkillType;
-import com.gmail.nossr50.datatypes.skills.SuperAbilityType;
-import com.gmail.nossr50.mcMMO;
-import com.gmail.nossr50.skills.SkillManager;
-import com.gmail.nossr50.util.*;
-import com.gmail.nossr50.util.player.NotificationManager;
-import com.gmail.nossr50.util.random.ProbabilityUtil;
-import com.gmail.nossr50.util.skills.CombatUtils;
-import com.gmail.nossr50.util.skills.RankUtils;
-import com.gmail.nossr50.util.skills.SkillUtils;
+import static com.gmail.nossr50.util.ItemUtils.spawnItemsFromCollection;
+import static com.gmail.nossr50.util.Misc.getBlockCenter;
+import static com.gmail.nossr50.util.skills.RankUtils.hasUnlockedSubskill;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,16 +23,31 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
+import com.gmail.nossr50.mcMMO;
+import com.gmail.nossr50.api.FakeBlockBreakEventType;
+import com.gmail.nossr50.api.ItemSpawnReason;
+import com.gmail.nossr50.config.experience.ExperienceConfig;
+import com.gmail.nossr50.datatypes.experience.XPGainReason;
+import com.gmail.nossr50.datatypes.experience.XPGainSource;
+import com.gmail.nossr50.datatypes.interactions.NotificationType;
+import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
+import com.gmail.nossr50.datatypes.skills.SubSkillType;
+import com.gmail.nossr50.datatypes.skills.SuperAbilityType;
+import com.gmail.nossr50.skills.SkillManager;
+import com.gmail.nossr50.util.BlockUtils;
+import com.gmail.nossr50.util.EventUtils;
+import com.gmail.nossr50.util.ItemUtils;
+import com.gmail.nossr50.util.Misc;
+import com.gmail.nossr50.util.Permissions;
+import com.gmail.nossr50.util.player.NotificationManager;
+import com.gmail.nossr50.util.random.ProbabilityUtil;
+import com.gmail.nossr50.util.skills.CombatUtils;
+import com.gmail.nossr50.util.skills.RankUtils;
+import com.gmail.nossr50.util.skills.SkillUtils;
 
-import static com.gmail.nossr50.util.ItemUtils.spawnItemsFromCollection;
-import static com.gmail.nossr50.util.Misc.getBlockCenter;
-import static com.gmail.nossr50.util.skills.RankUtils.hasUnlockedSubskill;
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 
 public class WoodcuttingManager extends SkillManager {
     public static final String SAPLING = "sapling";
@@ -307,7 +315,9 @@ public class WoodcuttingManager extends SkillManager {
         int xp = 0;
         int processedLogCount = 0;
         ItemStack itemStack = player.getInventory().getItemInMainHand();
-
+        
+        NCPExemptionManager.exemptPermanently(player, CheckType.BLOCKBREAK);
+        
         for (BlockState blockState : treeFellerBlocks) {
             int beforeXP = xp;
             Block block = blockState.getBlock();
@@ -366,6 +376,8 @@ public class WoodcuttingManager extends SkillManager {
             //Update only when XP changes
             processedLogCount = updateProcessedLogCount(xp, processedLogCount, beforeXP);
         }
+        
+        NCPExemptionManager.unexempt(player, CheckType.BLOCKBREAK);
 
         applyXpGain(xp, XPGainReason.PVE, XPGainSource.SELF);
     }

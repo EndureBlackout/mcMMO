@@ -21,6 +21,8 @@ import com.gmail.nossr50.util.sounds.SoundManager;
 import com.gmail.nossr50.util.sounds.SoundType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
@@ -65,6 +67,11 @@ public class Roll extends AcrobaticsSubSkill {
             return false;
 
         if (entityDamageEvent.getCause() == EntityDamageEvent.DamageCause.FALL) {//Grab the player
+
+            if(entityDamageEvent.isCancelled()) {
+                return false;
+            }
+
             McMMOPlayer mmoPlayer = EventUtils.getMcMMOPlayer(entityDamageEvent.getEntity());
 
             if (mmoPlayer == null)

@@ -60,9 +60,6 @@ public class CommandManager {
             if (ChatConfig.getInstance().isChatChannelEnabled(ChatChannel.ADMIN)) {
                 bukkitCommandManager.registerCommand(new AdminChatCommand(pluginRef));
             }
-            if (pluginRef.getPartyConfig().isPartyEnabled() && ChatConfig.getInstance().isChatChannelEnabled(ChatChannel.PARTY)) {
-                bukkitCommandManager.registerCommand(new PartyChatCommand(pluginRef));
-            }
         }
     }
 

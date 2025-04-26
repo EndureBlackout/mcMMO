@@ -373,11 +373,11 @@ public final class CommandRegistrationManager {
         registerMmoeditCommand();
         registerSkillresetCommand();
 
-        // Party Commands
-        if (mcMMO.p.getPartyConfig().isPartyEnabled()) {
-            registerPartyCommand();
-            registerPtpCommand();
-        }
+//        // Party Commands
+//        if (mcMMO.p.getPartyConfig().isPartyEnabled()) {
+//            registerPartyCommand();
+//            registerPtpCommand();
+//        }
 
         // Player Commands
         registerInspectCommand();
